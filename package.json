@@ -2,9 +2,9 @@
   "name": "musicvisualizer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "start:dev": "npm run build-watch & npm run start-server",
+    "start:dev": "webpack-dev-server --hot --inline",
     "start-server": "nodemon --watch server main.js -e html,js,css",
     "build-watch": "webpack -w",
     "start": "echo 'Running server for production - developers, use npm run start:dev for development' && node main",
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   }
 }
