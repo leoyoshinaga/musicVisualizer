@@ -1,8 +1,18 @@
 // const THREE = require('./js/three')
 // const OrbitControls = require('./js/OrbitControls')
+const SimplexNoise = require('simplex-noise')
+var noise = new SimplexNoise()
 
 let scene , camera, renderer;
 function init(){
+  var context = new AudioContext()
+  var audio = document.getElementById('myAudio')
+  var audioSource = context.createMediaElementSource(audio)
+  var analyser = context.createAnalyser()
+  audioSource.connect(analyser)
+  analyser.connect(context.destination)
+  analyser.fftSize = 512
+  var dataArray = new Uint8Array(analyser.frequencyBinCount)
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 45, 30000 );
   camera.position.set(-900, -200, -900)
@@ -14,7 +24,7 @@ function init(){
 
   //controls
   let controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.addEventListener('change', renderer)
+
   controls.maxDistance = 1500
   //skybox
   let materialArray = [];
@@ -54,6 +64,7 @@ function init(){
 } );
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
+  audio.play()
   animate()
 }
 
@@ -66,3 +77,4 @@ function animate() {
 	renderer.render( scene, camera );
 }
 init()
+
