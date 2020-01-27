@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/leoyoshinaga/musicVisualizer#readme",
   "dependencies": {
-    "three": "^0.112.1"
+    "simplex-noise": "^2.4.0",
+    "three": "^0.112.1",
+    "web-audio-api": "^0.2.2",
+    "web-audio-beat-detector": "^7.0.82"
   },
   "devDependencies": {
     "webpack": "^4.41.5",
