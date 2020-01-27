@@ -51,7 +51,7 @@ function init(){
   let skybox = new THREE.Mesh(skyboxCube, materialArray)
   scene.add(skybox)
 
-  var geometry = new THREE.BoxGeometry( 300, 300, 300 );
+  var geometry = new THREE.BoxGeometry( 22, 22, 22 );
   var loader = new THREE.CubeTextureLoader();
   loader.setCrossOrigin("")
   const textureCube = loader.load(['divine_ft.jpg', 'divine_bk.jpg', 'divine_up.jpg', 'divine_dn.jpg', 'divine_rt.jpg', 'divine_lf.jpg'])
@@ -64,6 +64,18 @@ function init(){
 } );
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
+
+  var icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4)
+  var lambertMaterial = new THREE.MeshLambertMaterial({
+      color: 0xff00ee,
+      wireframe: true
+  });
+
+  var ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial)
+  ball.position.set(0, 0, 0)
+  scene.add(ball)
+
+
   audio.play()
   animate()
 }
