@@ -1,7 +1,7 @@
 node_modules
 public/bundle.js
 public/bundle.js.map
-js
+js/three.min.js
 .DS_Store
 npm-debug.log
 

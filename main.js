@@ -1,9 +1,12 @@
-// const THREE = require('./js/three')
-// const OrbitControls = require('./js/OrbitControls')
+//wrap everything in a start query selector
+document.querySelector('#start').onclick = function(){
+document.getElementById('start').style.display = 'block';
+
 const SimplexNoise = require('simplex-noise')
 var noise = new SimplexNoise()
 
-let scene , camera, renderer, ball, skybox
+//declare the whole scene globally
+let scene , camera, renderer, ball, skybox, cube
 //parsing music into an array
 var context = new AudioContext()
 var audio = document.getElementById('myAudio')
@@ -14,12 +17,12 @@ analyser.connect(context.destination)
 analyser.fftSize = 512
 var dataArray = new Uint8Array(analyser.frequencyBinCount)
 
-//initiate THREE stuff
+//initiate THREE scene
 function init(){
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 45, 30000 );
-  camera.position.set(-900, -200, -900)
+  camera.position.set(-90, -20, -90)
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -33,12 +36,12 @@ function init(){
   //skybox
   let materialArray = [];
 
-  let texture_ft = new THREE.TextureLoader().load('./divine_ft.jpg')
-  let texture_bk = new THREE.TextureLoader().load('./divine_bk.jpg')
-  let texture_up = new THREE.TextureLoader().load('./divine_up.jpg')
-  let texture_dn = new THREE.TextureLoader().load('./divine_dn.jpg')
-  let texture_rt = new THREE.TextureLoader().load('./divine_rt.jpg')
-  let texture_lf = new THREE.TextureLoader().load('./divine_lf.jpg')
+  let texture_ft = new THREE.TextureLoader().load('divine_ft.jpg')
+  let texture_bk = new THREE.TextureLoader().load('divine_bk.jpg')
+  let texture_up = new THREE.TextureLoader().load('divine_up.jpg')
+  let texture_dn = new THREE.TextureLoader().load('divine_dn.jpg')
+  let texture_rt = new THREE.TextureLoader().load('divine_rt.jpg')
+  let texture_lf = new THREE.TextureLoader().load('divine_lf.jpg')
 
   materialArray.push(new THREE.MeshBasicMaterial({map: texture_ft}))
   materialArray.push(new THREE.MeshBasicMaterial({map: texture_bk}))
@@ -51,23 +54,29 @@ function init(){
     materialArray[i].side = THREE.BackSide
   }
 
-  let skyboxCube = new THREE.BoxGeometry(10000, 10000, 10000)
+  let skyboxCube = new THREE.BoxGeometry(1000, 1000, 1000)
   skybox = new THREE.Mesh(skyboxCube, materialArray)
   scene.add(skybox)
 
+  //adding lights
+  scene.add(new THREE.AmbientLight(0x404040))
+  var dirLight = new THREE.DirectionalLight(0xffffff);
+  dirLight.position.set(50, 50, 50);
+  scene.add(dirLight)
+  //center box
   var geometry = new THREE.BoxGeometry( 22, 22, 22 );
   var loader = new THREE.CubeTextureLoader();
   loader.setCrossOrigin("")
-  const textureCube = loader.load(['divine_ft.jpg', 'divine_bk.jpg', 'divine_up.jpg', 'divine_dn.jpg', 'divine_rt.jpg', 'divine_lf.jpg'])
-
+  const textureCube = loader.load(['divine_up.jpg', 'divine_up.jpg', 'divine_up.jpg', 'divine_up.jpg', 'divine_up.jpg', 'divine_up.jpg'])
+  geometry.computeVertexNormals()
   var material = new THREE.MeshStandardMaterial( {
     envMap: textureCube,
-    metalness: 0.7,   // between 0 and 1
-    roughness: 0.5 // between 0 and 1
+    metalness: 1,   // between 0 and 1
+    roughness: 0.2 // between 0 and 1
 
 } );
-  const cube = new THREE.Mesh( geometry, material );
-  scene.add( cube );
+  // cube = new THREE.Mesh( geometry, material );
+  // scene.add( cube );
 
   var icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4)
   var lambertMaterial = new THREE.MeshLambertMaterial({
@@ -75,7 +84,7 @@ function init(){
       wireframe: true
   });
 
-  ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial)
+  ball = new THREE.Mesh(icosahedronGeometry, material)
   ball.position.set(0, 0, 0)
   scene.add(ball)
 
@@ -84,6 +93,7 @@ function init(){
   animate()
 }
 
+init()
 
 function animate() {
   analyser.getByteFrequencyData(dataArray);
@@ -101,6 +111,7 @@ function animate() {
 
   ball.rotation.y += 0.005;
   skybox.rotation.y += 0.005
+  // cube.rotation.y+=0.005
   renderer.render(scene, camera);
   requestAnimationFrame(animate)
 	renderer.render( scene, camera );
@@ -121,7 +132,7 @@ function makeRoughBall(mesh, bassFr, treFr) {
   mesh.geometry.computeVertexNormals();
   mesh.geometry.computeFaceNormals();
 }
-init()
+
 
 function fractionate(val, minVal, maxVal) {
   return (val - minVal)/(maxVal - minVal);
@@ -140,4 +151,6 @@ function avg(arr){
 
 function max(arr){
   return arr.reduce(function(a, b){ return Math.max(a, b); })
+}
+
 }
