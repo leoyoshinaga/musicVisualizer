@@ -22,7 +22,7 @@ function init(){
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 45, 30000 );
-  camera.position.set(-90, -20, -90)
+  camera.position.set(-90, -55, -90)
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -32,7 +32,7 @@ function init(){
   //controls
   let controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  controls.maxDistance = 1500
+  controls.maxDistance = 900
   //skybox
   let materialArray = [];
 
@@ -54,7 +54,7 @@ function init(){
     materialArray[i].side = THREE.BackSide
   }
 
-  let skyboxCube = new THREE.BoxGeometry(1000, 1000, 1000)
+  let skyboxCube = new THREE.BoxGeometry(3000, 3000, 3000)
   skybox = new THREE.Mesh(skyboxCube, materialArray)
   scene.add(skybox)
 
@@ -135,13 +135,13 @@ function makeRoughBall(mesh, bassFr, treFr) {
 
 
 function fractionate(val, minVal, maxVal) {
-  return (val - minVal)/(maxVal - minVal);
+  return (val - minVal)/(maxVal - minVal)/2;
 }
 
 function modulate(val, minVal, maxVal, outMin, outMax) {
   var fr = fractionate(val, minVal, maxVal);
   var delta = outMax - outMin;
-  return outMin + (fr * delta);
+  return outMin + (fr * delta)*maxVal;
 }
 
 function avg(arr){
